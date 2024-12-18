@@ -11,7 +11,7 @@ interface DokterDAO {
     @Insert
     suspend fun insertDokter(dokter: Dokter)
     @Query("SELECT * FROM dokter ORDER BY nama ASC")
-    suspend fun getAllDokter():Flow<List<Dokter>>
+    fun getAllDokter():Flow<List<Dokter>>
     @Query("SELECT * FROM dokter WHERE id = :id ")
-    suspend fun getDokter(id: String): Flow<Dokter>
+    fun getDokter(id: String): Flow<Dokter>
 }
