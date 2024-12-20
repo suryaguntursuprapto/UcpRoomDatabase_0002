@@ -16,8 +16,8 @@ interface RepositoryRS {
 
     //dari entitas jadwal
     suspend fun insertJadwal(jadwal: Jadwal)
-    fun getAllJadwal() :Flow<List<Jadwal>>
-    fun getJadwal(id: String) : Flow<Jadwal>
+    fun getAllJadwal(): Flow<List<Jadwal>>
+    fun getJadwal(id: String): Flow<Jadwal>
     suspend fun deleteJadwal(jadwal: Jadwal)
     suspend fun updateJadwal(jadwal: Jadwal)
 }
