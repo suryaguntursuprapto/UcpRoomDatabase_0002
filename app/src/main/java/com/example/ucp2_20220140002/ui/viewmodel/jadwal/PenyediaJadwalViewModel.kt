@@ -1,4 +1,4 @@
-package com.example.ucp2_20220140002.ui.viewmodel.dokter
+package com.example.ucp2_20220140002.ui.viewmodel.jadwal
 
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.createSavedStateHandle
@@ -7,26 +7,35 @@ import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
 import com.example.ucp2_20220140002.RsApp
 import com.example.ucp2_20220140002.ui.view.dokter.*
-import com.example.ucp2_20220140002.ui.viewmodel.jadwal.RsApp
+import com.example.ucp2_20220140002.ui.viewmodel.dokter.DetailDokterViewModel
+import com.example.ucp2_20220140002.ui.viewmodel.dokter.DokterViewModel
+import com.example.ucp2_20220140002.ui.viewmodel.dokter.HomeDokterViewModel
 
-object PenyediaDokterViewModel{
-    val FactoryDokter = viewModelFactory {
+object PenyediaJadwalViewModel{
+    val FactoryJadwal = viewModelFactory {
         initializer {
-            DokterViewModel(
+            JadwalViewModel(
                 RsApp().containerApp.repositoryRS
             )
         }
         initializer {
-            HomeDokterViewModel(
+            HomeJadwalViewModel(
                 RsApp().containerApp.repositoryRS
             )
         }
         initializer {
-            DetailDokterViewModel(
+            DetailJadwalViewModel(
                 createSavedStateHandle(),
                 RsApp().containerApp.repositoryRS,
             )
         }
+        initializer {
+            UpdatedJadwalViewModel(
+                createSavedStateHandle(),
+                RsApp().containerApp.repositoryRS,
+            )
+        }
+
     }
 }
 
