@@ -1,8 +1,8 @@
-package com.example.ucp2_20220140002.ui.viewmodel.dokter
+package com.example.ucp2_20220140002.ui.viewmodel.jadwal
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.ucp2_20220140002.data.entity.Dokter
+import com.example.ucp2_20220140002.data.entity.Jadwal
 import com.example.ucp2_20220140002.repository.RepositoryRS
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.SharingStarted
@@ -13,15 +13,15 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.flow.stateIn
 
-class HomeDokterViewModel (
+class HomeJadwalViewModel (
     private val repositoryRS: RepositoryRS
 ) : ViewModel() {
 
-    val homeUIState: StateFlow<HomeUiState> = repositoryRS.getAllDokter()
+    val homeJdwlUIState: StateFlow<HomeUiState> = repositoryRS.getAllJadwal()
         .filterNotNull()
         .map {
             HomeUiState (
-                listDokter = it.toList(),
+                listJadwal = it.toList(),
                 isLoading = false,
             )
         }
@@ -48,7 +48,7 @@ class HomeDokterViewModel (
 }
 
 data class HomeUiState (
-    val listDokter: List<Dokter> = listOf(),
+    val listJadwal: List<Jadwal> = listOf(),
     val isLoading: Boolean = false,
     val isError: Boolean = false,
     val errorMessage: String = ""
