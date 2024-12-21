@@ -20,7 +20,7 @@ class DokterViewModel(
     }
 
     // Validasi data input pengguna
-    private fun validateFields(): Boolean {
+    fun validateFields(): Boolean {
         val event = uiState.dokterEvent
         val errorState = FormErrorStateDokter(
             id = if (event.id.isNotEmpty()) null else "ID tidak boleh kosong",
