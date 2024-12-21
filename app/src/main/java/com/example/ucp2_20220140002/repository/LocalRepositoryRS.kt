@@ -28,8 +28,8 @@ class LocalRepositoryRS(
     override fun getAllJadwal(): Flow<List<Jadwal>> {
         return jadwalDAO.getAllJadwal()
     }
-    override fun getJadwal(id: String): Flow<Jadwal> {
-        return jadwalDAO.getJadwal(idPasien = id)
+    override fun getJadwal(idPasien: String): Flow<Jadwal> {
+        return jadwalDAO.getJadwal(idPasien = idPasien)
     }
     override suspend fun deleteJadwal(jadwal: Jadwal) {
         jadwalDAO.deleteJadwal(jadwal)
