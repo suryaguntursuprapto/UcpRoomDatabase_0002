@@ -3,6 +3,7 @@ package com.example.ucp2_20220140002.ui.viewmodel.jadwal
 import androidx.compose.runtime.*
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.ucp2_20220140002.data.entity.Dokter
 import com.example.ucp2_20220140002.data.entity.Jadwal
 import com.example.ucp2_20220140002.repository.RepositoryRS
 import kotlinx.coroutines.launch
@@ -69,6 +70,7 @@ class JadwalViewModel(
 // Data class untuk menyimpan data input form jadwal
 data class JadwalEvent(
     val idPasien: String = "",
+    val idDokter: String = "",
     val namaDokter: String = "",
     val namaPasien: String = "",
     val noHPpasien: String = "",
@@ -78,6 +80,7 @@ data class JadwalEvent(
 
 fun JadwalEvent.toJadwalEntity(): Jadwal = Jadwal(
     idPasien = idPasien,
+    idDokter = idDokter,
     namaDokter = namaDokter,
     namaPasien = namaPasien,
     noHPpasien = noHPpasien,
@@ -88,6 +91,7 @@ fun JadwalEvent.toJadwalEntity(): Jadwal = Jadwal(
 // Data class untuk validasi form jadwal
 data class FormErrorStateJadwal(
     val idPasien: String? = null,
+    val idDokter: String? = null,
     val namaDokter: String? = null,
     val namaPasien: String? = null,
     val noHPpasien: String? = null,
@@ -96,6 +100,7 @@ data class FormErrorStateJadwal(
 ) {
     fun isValid(): Boolean {
         return idPasien == null
+                && idDokter == null
                 && namaDokter == null
                 && namaPasien == null
                 && noHPpasien == null

@@ -41,11 +41,13 @@ class DokterViewModel(
         if (validateFields()) {
             viewModelScope.launch {
                 try {
+                    // Menyimpan data dokter
                     repositoryRS.insertDokter(currentEvent.toDokterEntity())
+
                     uiState = uiState.copy(
                         snackBarMessage = "Data Dokter Berhasil Disimpan",
-                        dokterEvent = DokterEvent(),
-                        isEntryValid = FormErrorStateDokter()
+                        dokterEvent = DokterEvent(), // Reset form
+                        isEntryValid = FormErrorStateDokter() // Reset error state
                     )
                 } catch (e: Exception) {
                     uiState = uiState.copy(
@@ -59,6 +61,7 @@ class DokterViewModel(
             )
         }
     }
+
 
     // Reset pesan snackbar
     fun resetSnackBarMessage() {

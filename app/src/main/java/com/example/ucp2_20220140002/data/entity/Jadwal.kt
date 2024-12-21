@@ -1,5 +1,6 @@
 package com.example.ucp2_20220140002.data.entity
 
+import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.ForeignKey
 import androidx.room.PrimaryKey
@@ -17,6 +18,8 @@ import androidx.room.PrimaryKey
 data class Jadwal(
     @PrimaryKey
     val idPasien: String,
+    @ColumnInfo(index = true)
+    val idDokter: String,
     val namaDokter: String,
     val namaPasien: String,
     val noHPpasien: String,
