@@ -1,17 +1,37 @@
 package com.example.ucp2_20220140002.ui.viewmodel.jadwal
 
+import android.util.Log
 import androidx.compose.runtime.*
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.ucp2_20220140002.data.entity.Dokter
 import com.example.ucp2_20220140002.data.entity.Jadwal
 import com.example.ucp2_20220140002.repository.RepositoryRS
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 
 class JadwalViewModel(
-    private val repositoryJadwal: RepositoryRS
+    private val repositoryRS: RepositoryRS
 ) : ViewModel() {
     var uiState by mutableStateOf(JadwalUIState())
+
+    private val _dokterList = MutableStateFlow<List<Dokter>>(emptyList())
+    val dokterList: Flow<List<Dokter>> = _dokterList
+
+    init {
+        loadDokterList()
+    }
+
+    private fun loadDokterList() {
+        viewModelScope.launch {
+            repositoryRS.getAllDokter().collect { dokterList ->
+                _dokterList.value = dokterList // Simpan hasil ke StateFlow
+            }
+        }
+    }
+
 
     // Memperbarui state berdasarkan input pengguna
     fun updateState(jadwalEvent: JadwalEvent) {
@@ -21,7 +41,7 @@ class JadwalViewModel(
     }
 
     // Validasi data input pengguna
-    private fun validateFields(): Boolean {
+    fun validateFields(): Boolean {
         val event = uiState.jadwalEvent
         val errorState = FormErrorStateJadwal(
             idPasien = if (event.idPasien.isNotEmpty()) null else "ID Pasien tidak boleh kosong",
@@ -38,23 +58,29 @@ class JadwalViewModel(
     // Simpan data jadwal
     fun saveData() {
         val currentEvent = uiState.jadwalEvent
+        Log.d("ViewModel", "saveData() called with: $currentEvent") // Logging awal
 
         if (validateFields()) {
             viewModelScope.launch {
                 try {
-                    repositoryJadwal.insertJadwal(currentEvent.toJadwalEntity())
+                    Log.d("ViewModel", "Inserting data to DB...")
+                    repositoryRS.insertJadwal(currentEvent.toJadwalEntity())
+                    Log.d("ViewModel", "Data inserted successfully")
+
                     uiState = uiState.copy(
                         snackBarMessage = "Data Jadwal Berhasil Disimpan",
-                        jadwalEvent = JadwalEvent(),
+                        jadwalEvent = JadwalEvent(), // Reset form
                         isEntryValid = FormErrorStateJadwal()
                     )
                 } catch (e: Exception) {
+                    Log.e("ViewModel", "Error saving data: ${e.message}")
                     uiState = uiState.copy(
-                        snackBarMessage = "Data Gagal Disimpan"
+                        snackBarMessage = "Data Gagal Disimpan: ${e.message}"
                     )
                 }
             }
         } else {
+            Log.d("ViewModel", "Input validation failed")
             uiState = uiState.copy(
                 snackBarMessage = "Input Tidak Valid. Periksa Kembali Data Anda."
             )
