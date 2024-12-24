@@ -1,5 +1,6 @@
 package com.example.ucp2_20220140002.data.dao
 
+import android.util.Log
 import androidx.room.Dao
 import androidx.room.Delete
 import androidx.room.Insert
@@ -14,15 +15,14 @@ interface JadwalDAO {
     suspend fun insertJadwal(jadwal: Jadwal)
 
     @Query("SELECT * FROM jadwal ORDER BY namaPasien ASC")
-    fun getAllJadwal() :Flow<List<Jadwal>>
+    fun getAllJadwal(): Flow<List<Jadwal>>
 
     @Query("SELECT * FROM jadwal WHERE idPasien = :idPasien")
-    fun getJadwal(idPasien: String) : Flow<Jadwal>
+    fun getJadwal(idPasien: String): Flow<Jadwal?>
 
     @Delete
     suspend fun deleteJadwal(jadwal: Jadwal)
 
     @Update
     suspend fun updateJadwal(jadwal: Jadwal)
-
 }

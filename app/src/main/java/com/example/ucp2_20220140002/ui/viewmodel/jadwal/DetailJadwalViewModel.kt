@@ -1,11 +1,13 @@
 package com.example.ucp2_20220140002.ui.viewmodel.jadwal
 
+import android.util.Log
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.ucp2_20220140002.data.entity.Jadwal
 import com.example.ucp2_20220140002.repository.RepositoryRS
 import com.example.ucp2_20220140002.ui.navigation.DestinasiDetail
+import com.example.ucp2_20220140002.ui.navigation.DestinasiDetailJadwal
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
@@ -20,36 +22,46 @@ class DetailJadwalViewModel(
     savedStateHandle: SavedStateHandle,
     private val repositoryRS: RepositoryRS,
 ) : ViewModel() {
-    private val _idPasien: String = checkNotNull(savedStateHandle[DestinasiDetail.ID])
+    private val _idPasien: String = checkNotNull(savedStateHandle[DestinasiDetailJadwal.IDPASIEN])
+
 
     val detailUiState: StateFlow<DetailUiState> = repositoryRS.getJadwal(_idPasien)
-        .filterNotNull()
-        .map {
-            DetailUiState(
-                detailUiEvent = it.toDetailUiEvent(),
-                isLoading = false,
-            )
+        .map { jadwal ->
+            Log.d("DetailJadwalViewModel", "Jadwal fetched: $jadwal")
+            if (jadwal != null) {
+                DetailUiState(
+                    detailUiEvent = jadwal.toDetailUiEvent(),
+                    isLoading = false
+                )
+            } else {
+                DetailUiState(
+                    isLoading = false,
+                    isError = true,
+                    errorMessage = "Data tidak ditemukan"
+                )
+            }
         }
         .onStart {
             emit(DetailUiState(isLoading = true))
-            delay(600)
         }
-        .catch {
+        .catch { error ->
+            Log.e("DetailJadwalViewModel", "Error fetching jadwal: ${error.message}")
             emit(
                 DetailUiState(
                     isLoading = false,
                     isError = true,
-                    errorMessage = it.message ?: "Terjadi Kesalahan",
+                    errorMessage = error.message ?: "Error occurred"
                 )
             )
         }
         .stateIn(
-            scope = viewModelScope,
-            started = SharingStarted.WhileSubscribed(2000),
-            initialValue = DetailUiState(
-                isLoading = true,
-            ),
+            scope = viewModelScope,                     // Coroutine scope untuk menyimpan state
+            started = SharingStarted.WhileSubscribed(5000), // Berhenti jika tidak ada subscriber dalam 5 detik
+            initialValue = DetailUiState(isLoading = true)  // Nilai awal
         )
+
+
+
 
     fun deleteJadwal() {
         detailUiState.value.detailUiEvent.toJadwalEntity().let {
@@ -80,6 +92,7 @@ data class DetailUiState(
 fun Jadwal.toDetailUiEvent(): JadwalEvent {
     return JadwalEvent(
         idPasien = idPasien,
+        idDokter = idDokter,
         namaDokter = namaDokter,
         namaPasien = namaPasien,
         noHPpasien = noHPpasien,

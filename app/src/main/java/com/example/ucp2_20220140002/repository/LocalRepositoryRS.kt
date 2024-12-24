@@ -1,5 +1,6 @@
 package com.example.ucp2_20220140002.repository
 
+import android.util.Log
 import com.example.ucp2_20220140002.data.dao.DokterDAO
 import com.example.ucp2_20220140002.data.dao.JadwalDAO
 import com.example.ucp2_20220140002.data.entity.Dokter
@@ -28,8 +29,9 @@ class LocalRepositoryRS(
     override fun getAllJadwal(): Flow<List<Jadwal>> {
         return jadwalDAO.getAllJadwal()
     }
-    override fun getJadwal(idPasien: String): Flow<Jadwal> {
-        return jadwalDAO.getJadwal(idPasien = idPasien)
+    override fun getJadwal(idPasien: String): Flow<Jadwal?> {
+        Log.d("RepositoryRS", "Fetching jadwal with idPasien: $idPasien")
+        return jadwalDAO.getJadwal(idPasien)
     }
     override suspend fun deleteJadwal(jadwal: Jadwal) {
         jadwalDAO.deleteJadwal(jadwal)
