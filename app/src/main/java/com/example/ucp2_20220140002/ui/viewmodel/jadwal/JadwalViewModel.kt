@@ -86,6 +86,31 @@ class JadwalViewModel(
             )
         }
     }
+    fun updateData() {
+        val currentEvent = uiState.jadwalEvent
+
+        if (validateFields()) {
+            viewModelScope.launch {
+                try {
+                    repositoryRS.updateJadwal(currentEvent.toJadwalEntity())
+                    uiState = uiState.copy(
+                        snackBarMessage = "Data berhasil diupdate",
+                        jadwalEvent = JadwalEvent(), // Reset form
+                        isEntryValid = FormErrorStateJadwal() // Reset validasi
+                    )
+                } catch (e: Exception) {
+                    uiState = uiState.copy(
+                        snackBarMessage = "Data gagal diupdate: ${e.message}"
+                    )
+                }
+            }
+        } else {
+            uiState = uiState.copy(
+                snackBarMessage = "Validasi gagal. Mohon periksa kembali input."
+            )
+        }
+    }
+
 
     // Reset pesan snackbar
     fun resetSnackBarMessage() {

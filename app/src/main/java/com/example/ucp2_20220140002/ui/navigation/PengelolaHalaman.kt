@@ -19,6 +19,7 @@ import com.example.ucp2_20220140002.ui.view.jadwal.DestinasiInsertJadwal
 import com.example.ucp2_20220140002.ui.view.jadwal.DetailJadwalView
 import com.example.ucp2_20220140002.ui.view.jadwal.HomeJadwalView
 import com.example.ucp2_20220140002.ui.view.jadwal.InsertJadwalView
+import com.example.ucp2_20220140002.ui.view.jadwal.UpdateJadwalView
 
 @Composable
 fun PengelolaHalaman(
@@ -107,7 +108,10 @@ fun PengelolaHalaman(
                 DetailJadwalView(
                     idPasien = id,
                     onBack = { navController.popBackStack() },
-                    onEditClick = { id -> navController.navigate("${DestinasiUpdate.route}/$it") },
+                    onEditClick = { id ->
+                        Log.d("PengelolaHalaman", "Navigating to UpdateJadwalView with id: $id")
+                        navController.navigate("${DestinasiUpdate.route}/$id")
+                    },
                     onDeleteClick = { navController.popBackStack() },
                     modifier = Modifier
                 )
@@ -116,6 +120,25 @@ fun PengelolaHalaman(
                 Text("ID Jadwal tidak ditemukan", color = Color.Red)
             }
 
+        }
+        composable(
+            DestinasiUpdate.routesWithArg,
+            arguments = listOf(
+                navArgument(DestinasiUpdate.ID) {
+                    type = NavType.StringType
+                }
+            )
+        ) {
+            val idJadwal = it.arguments?.getString(DestinasiUpdate.ID)
+            idJadwal?.let { id ->
+                UpdateJadwalView(
+                    onBack = { navController.popBackStack() },
+                    onNavigate = { navController.popBackStack() },
+                    modifier = Modifier
+                )
+            } ?: run {
+                Text("ID Jadwal tidak ditemukan", color = Color.Red)
+            }
         }
 
 
